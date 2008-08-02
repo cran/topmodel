@@ -1,0 +1,7 @@
+useDynLib(topmodel)
+
+export(topmodel,
+      make.classes,
+      topidx,
+      NSeff,
+      infiltration)
