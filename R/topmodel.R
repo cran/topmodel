@@ -1,11 +1,11 @@
 topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = NA) {
 
-# deal with verbosity:
+  ## deal with verbosity:
 
   v = 1
-  if(verbose && is.na(Qobs)) v <- 5
+  if(verbose && is.na(Qobs)) v <- 6
 
-# number of iterations
+  ## number of iterations
 
   if (is.vector(parameters)) iterations <- 1
   else {
@@ -13,15 +13,15 @@ topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = N
     else return(NA)
   }
 
-# check data inconsistencies
+  ## check data inconsistencies
 
-  if(length(parameters)/iterations < 11 || length(rain[is.na(rain)]) != 0 ) {
-    print("Parameters or rain input problem. Check your data")
-    return()
-  }
+  if(length(parameters)/iterations < 11) stop("Incorrect number of parameters")
+  if(length(rain[is.na(rain)]) != 0 ) stop("Rain contains incorrect values such as NA's")
 
-# check whether the function should return E or for Qsim
-# Adjust lengthResult accordingly
+  ## check dangerous parameter values (not implemented)
+
+  ## check whether the function should return E or for Qsim
+  ## Adjust lengthResult accordingly
 
   if(length(Qobs) == 1 && is.na(Qobs)) {
     Qobs <- -9999    # go for Qsim
@@ -38,38 +38,39 @@ topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = N
     }
   }
 
-# running the model...
+  ## running the model...
 
   result <- .C("topmodel",
-		PACKAGE = "topmodel",
-		as.double(t(parameters)),
-		as.double(topidx),
-		as.double(delay),
-		as.double(rain),
-		as.double(ET0),
-		as.double(Qobs),
-		as.integer(length(topidx)/2),
-		as.integer(length(rain)),
-		as.integer(iterations),
-		as.integer(length(delay[,1])),
-		as.integer(v),
-		result = double(v * lengthResult))$result
+               PACKAGE = "topmodel",
+               as.double(t(parameters)),
+               as.double(as.matrix(topidx)),
+               as.double(as.matrix(delay)),
+               as.double(rain),
+               as.double(ET0),
+               as.double(Qobs),
+               as.integer(length(topidx)/2),
+               as.integer(length(rain)),
+               as.integer(iterations),
+               as.integer(length(delay[,1])),
+               as.integer(v),
+               result = double(v * lengthResult))$result
 
-# formatting of the results
+  ## formatting of the results
 
-  if(v == 5) {
-     result <- matrix(result,ncol=5)
-     result <- list(
-        Q  = matrix(result[,1], ncol=iterations),
-        qo = matrix(result[,2], ncol=iterations),
-        qs = matrix(result[,3], ncol=iterations),
-        S  = matrix(result[,4], ncol=iterations),
-        fex  = matrix(result[,5], ncol=iterations)
-        )
-     }
+  if(v == 6) {
+    result <- matrix(result,ncol=6)
+    result <- list(
+                   Q  = matrix(result[,1], ncol=iterations),
+                   qo = matrix(result[,2], ncol=iterations),
+                   qs = matrix(result[,3], ncol=iterations),
+                   S  = matrix(result[,4], ncol=iterations),
+                   fex= matrix(result[,5], ncol=iterations),
+                   Ea = matrix(result[,6], ncol=iterations)
+                   )
+  }
 
   if((Qobs == -9999) && (iterations > 1) && (v == 1)) result <- matrix(result, ncol= iterations)
 
-return(result)
+  return(result)
 
 }

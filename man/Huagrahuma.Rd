@@ -1,5 +1,6 @@
-\name{Huagrahuma}
+\name{huagrahuma}
 \docType{data}
+\alias{huagrahuma}
 \alias{delay}
 \alias{ET0}
 \alias{parameters}
@@ -17,7 +18,7 @@
     rain       \tab Observed precipitation (mm / 15 min)\cr
   }
 }
-\usage{Huagrahuma}
+\usage{huagrahuma}
 %\format{}
 %\source{}
 \references{

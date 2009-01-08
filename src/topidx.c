@@ -1,319 +1,267 @@
-#include <stdio.h>
-#include <stdlib.h>
+
+/* calculates the topographic index (a/ tan(beta) ) */
+
+/*  Average downslope slope is also calculated but not returned */
+
 #include <math.h>
 #include <R.h>
-#include <R_ext/Utils.h>
 
 #define	ZERO		0.0000001
 
-void topidx(double *map2,
-	    int *rows,
-            int *cols,
-            double *ew_res,
-            double *ns_res,
-	    double *topidxmap)
+void topidx(double *inputdem,
+	    int    *inputriver,
+	    int    *nrow, 
+	    int    *ncol,
+	    double *ew_res,
+	    double *ns_res,
+	    double *output)
 {
-
-  double	**atb,**a, **map;
-  int	natb = 0; 	//natb = number of NULL values
-  int	i,j,k,snatb;
-  int	iter,nroute,nslp;
-  double	sum,route[9],tanB[9],dx,dx1,dx2,sumtb,C;
-  int	nsink = 0;
-  int	ncells = (*rows)*(*cols);
-
-  dx     = *ew_res;
-  dx1    = 1 / dx;
-  dx2    = 1 / (1.414 * dx);
-  snatb  = natb;
+  int    i,j,ii,jj,k,k1,k2,k3,nf,i2,j2,natbold;
+  int    natb = 0;     /* number of atbs still to be analysed */
+  int    iproute,nrout,river,not_yet;
+  double **dem, **atb, **area, **slope, **rivermap;
+  double exclude,dnx,routefac,nslp,xr,yr;
+  int	 nsink = 0;
+  double routdem[9], tanb[9];
+  double c,dx1,dx2,sum,sumtb;
 
   /* memory allocation */
+          
+  dem   = (double **) R_alloc(*nrow, sizeof(double *));
+  atb   = (double **) R_alloc(*nrow, sizeof(double *));
+  area  = (double **) R_alloc(*nrow, sizeof(double *));
+  slope = (double **) R_alloc(*nrow, sizeof(double *));
+  rivermap = (double **) R_alloc(*nrow, sizeof(double *));
 
-  atb = (double **) R_alloc(*rows, sizeof(double *));
-  a = (double **) R_alloc(*rows, sizeof(double *));
-  map = (double **) R_alloc(*rows, sizeof(double *));
-
-  for(i=0; i<*rows; i++){
-    atb[i] = (double *) R_alloc(*cols, sizeof(double));
-    a[i] = (double *) R_alloc(*cols, sizeof(double));
-    map[i] = (double *) R_alloc(*cols, sizeof(double));
+  for(i=0; i<*nrow; i++){
+    dem[i]   = (double *) R_alloc(*ncol, sizeof(double));
+    atb[i]   = (double *) R_alloc(*ncol, sizeof(double));
+    area[i]  = (double *) R_alloc(*ncol, sizeof(double));
+    slope[i] = (double *) R_alloc(*ncol, sizeof(double));
+    rivermap[i] = (double *) R_alloc(*ncol, sizeof(double));
   }
 
-  /* copy input to map */
+  /* copy input to dem (R fills matrices per column) */
 
-  for(i=0;i<*rows;i++){
-    for(j=0;j<*cols;j++){
-      map[i][j] = map2[j+(*cols)*i];
+  for(j=0; j< *ncol; j++){
+    for(i=0; i< *nrow; i++){
+      dem[i][j] = inputdem[i+(*nrow)*j];
+      rivermap[i][j] = inputriver[i+(*nrow)*j];
     }
   }
 
-  /* Initialisation */
+  /* initialisation */
+  /* atb initalised with elevation, -9999 for excluded cells */
 
-  for(i=0;i<*rows;i++){
-    for(j=0;j<*cols;j++){
-      a[i][j]=(*ew_res)*(*ns_res);
-      if(map[i][j] < -9000){	// indication of null value
-	natb++;				
-	atb[i][j] = -9999;  	// null value
-      }else{
-	atb[i][j] = -10.0;	// no topidx calculated yet
+  exclude = -9999;
+  river = 0;
+  dx1 = 1 / *ew_res;
+  dx2 = 1 / (sqrt(2) * *ew_res);
+  natbold = -1;
+
+  for(j=0; j< *ncol; j++){
+    for(i=0; i< *nrow; i++){
+      if(dem[i][j] < -9000) dem[i][j] = exclude;
+      area[i][j] = *ew_res * *ns_res;
+      if(dem[i][j] == exclude) {
+        natb++;
+        atb[i][j] = exclude;
+      } else {
+        atb[i][j] = -9.9;
       }
     }
   }
 
-  /* calculation */
+  /* if natbold = natb after the loop then the loop did not fill any more cells
+     and we are probably in an indefinite loop so quit.
+     The unfinished areas will show up as NA */
 
-  Rprintf("ncells = %i\n", ncells);
-  Rprintf("natb = %i\n", natb);
+  /* an alternative is to work with a fixed loop, and some output to the user:
 
-  Rprintf("Iterations:         ");
+     Rprintf("ncells = %i\n", ncells);
+     Rprintf("natb = %i\n", natb);
 
-  for(iter=1;natb<ncells;iter++){
+     Rprintf("Iterations:         ");
 
-    R_CheckUserInterrupt();
-    Rprintf("\b\b\b\b\b\b\b\b%8i",iter);
+     for(iter=1;natb<ncells;iter++){
 
-    for(i=0;i<*rows;i++){
-      for(j=0;j<*cols;j++){
-	/* skip null values */
-	if(map[i][j] < -9000)
-	  continue;		// go to next j in for-loop
+     R_CheckUserInterrupt();
+     Rprintf("\b\b\b\b\b\b\b\b%8i",iter); */
 
-				/* skip squares already done */
-	if(atb[i][j] == -9999 || atb[i][j]>=ZERO)
+  while((natb != natbold) && (natb < *nrow * *ncol)) {
+
+    natbold = natb;
+
+    /* loop through the grid cell and check if there is an upslope element
+       without an atanb value. If so, we cannot yet calculate the topidx. */
+
+    for(j = 0; j < *ncol; j++) {
+      for(i = 0; i < *nrow; i++) {
+              
+        /* skip non catchment cells and cells that are done */
+        if((dem[i][j] == exclude) || (atb[i][j] >= ZERO))
 	  continue;
 
-	/* check the 8 possible flow directions for
-	 * upslope elements without an atb value
-	 */
-	if(i>0){
-	  if(j>0 &&
-	     (map[i-1][j-1] < -9000    ||	// upper left is NULL (necessary?)
-	      map[i-1][j-1]>map[i][j]) &&	// upper left is upslope
-	     atb[i-1][j-1] != -9999    &&	// upper left atb is not NULL
-	     atb[i-1][j-1]<ZERO)			// upper left atb < 0 (-10)
-	    continue;
+        /* river cells don't accumulate flow downstream and use the average of
+           the inflow slope as the local gradient */
 
-	  if((map[i-1][j] < -9000    ||		// idem for upper neighbour
-	      map[i-1][j]>map[i][j]) &&
-	     atb[i-1][j] != -9999    &&
-	     atb[i-1][j]<ZERO)
-	    continue;
+        if(rivermap[i][j] == 1) river = 1;
+        else {
 
-	  if(j+1 < *cols &&			// idem for upper right map
-	     (map[i-1][j+1] < -9000      ||		// also check if not on right limit
-	      map[i-1][j+1] > map[i][j]) &&
-	     atb[i-1][j+1] != -9999      &&
-	     atb[i-1][j+1]<ZERO)
-	    continue;
-	}
-	if(j>0 &&				// for left neighbour
-	   (map[i][j-1] < -9000    ||
-	    map[i][j-1]>map[i][j]) &&
-	   atb[i][j-1] != -9999    &&
-	   atb[i][j-1]<ZERO)
-	  continue;
-	if(j+1<*cols &&				// for right neighbour
-	   (map[i][j+1] < -9000    ||
-	    map[i][j+1]>map[i][j]) &&
-	   atb[i][j+1] != -9999    &&
-	   atb[i][j+1]<ZERO)
-	  continue;
-	if(i+1<*rows){
-	  if(j>0 &&
-	     (map[i+1][j-1] < -9000    ||	// lower left 
-	      map[i+1][j-1]>map[i][j]) &&
-	     atb[i+1][j-1] != -9999    &&
-	     atb[i+1][j-1]<ZERO)
-	    continue;
-	  if((map[i+1][j] < -9000    ||		// lower neighbour
-	      map[i+1][j]>map[i][j]) &&
-	     atb[i+1][j] != -9999    &&
-	     atb[i+1][j]<ZERO)
-	    continue;
-	  if(j+1<*cols &&
-	     (map[i+1][j+1] < -9000    ||	// lower right
-	      map[i+1][j+1]>map[i][j]) &&
-	     atb[i+1][j+1] != -9999    &&
-	     atb[i+1][j+1]<ZERO)
-	    continue;
-	}
-	/* find the outflow directions and calculate 
-	 * the sum of weights
-	 */
-	sum=0.0;
-	for(k=0;k<9;k++)
-	  route[k]=0.0;
-	nroute=0;
-	if(i>0){
-	  if(j>0 &&
-	     map[i-1][j-1] >= -9000 &&			// upper left is not NULL
-	     map[i][j]-map[i-1][j-1]>ZERO){		// upper left higher (samen!)
-	    	tanB[0]=(map[i][j]-map[i-1][j-1])*dx2;	// then calculate tanBdx2
-	    	route[0]=0.354*dx*tanB[0];		// = dy/4 !?
-	    	sum+=route[0];
-	    nroute++;
-	  }
-	  if(map[i-1][j] >= -9000 &&			// upper
-	     map[i][j]-map[i-1][j]>ZERO){
-	    	tanB[1]=(map[i][j]-map[i-1][j])*dx1;
-	    	route[1]=0.5*dx*tanB[1];			// = dy/2 !?
-	    	sum+=route[1];
-	    nroute++;
-	  }
-	  if(j+1<*cols &&				// upper right
-	     map[i-1][j+1] >= -9000 &&
-	     map[i][j]-map[i-1][j+1]>ZERO){
-	    	tanB[2]=(map[i][j]-map[i-1][j+1])*dx2;
-	    	route[2]=0.354*dx*tanB[2];
-	    	sum+=route[2];
-	    nroute++;
-	  }
-	}
-	if(j>0 &&					// left
-	   map[i][j-1] >= -9000 &&
-	   map[i][j]-map[i][j-1]>ZERO){
-	  	tanB[3]=(map[i][j]-map[i][j-1])*dx1;
-	  	route[3]=0.5*dx*tanB[3];
-	  	sum+=route[3];
-	  nroute++;
-	}
-	if(j+1<*cols){					// right
-	  if(map[i][j+1] >= -9000 &&
-	     map[i][j]-map[i][j+1]>ZERO){
-	    	tanB[5]=(map[i][j]-map[i][j+1])*dx1;
-	    	route[5]=0.5*dx*tanB[5];
-	    	sum+=route[5];
-	    nroute++;
-	  }
-	}
-	if(i+1<*rows){					// lower left
-	  if(j>0 &&
-	     map[i+1][j-1] >= -9000 &&
-	     map[i][j]-map[i+1][j-1]>ZERO){
-	    	tanB[6] = (map[i][j] - map[i+1][j-1]) * dx2;
-	    	route[6]=0.354*dx*tanB[6];
-	    	sum+=route[6];
-	    nroute++;
-	  }
-	  if(map[i+1][j] >= -9000 &&			// lower
-	     map[i][j]-map[i+1][j]>ZERO){
-	    	tanB[7]=(map[i][j]-map[i+1][j])*dx1;
-	    	route[7]=0.5*dx*tanB[7];
-	    	sum+=route[7];
-	    nroute++;
-	  }
-	  if(j+1<*cols &&				// lower right
-	     map[i+1][j+1] >= -9000 &&
-	     map[i][j]-map[i+1][j+1]>ZERO){
-	    	tanB[8]=(map[i][j]-map[i+1][j+1])*dx2;
-	    	route[8]=0.354*dx*tanB[8];
-	    	sum+=route[8];
-	    nroute++;
-	  }
-	}
+          /* check the 8 flow directions for upslope elements 
+             without a topidx value */
 
-	if(!nroute){
-	  /* Rprintf("Sink or boundary node at %d, %d\n",i,j); */
+          not_yet = 0;
+
+          for(jj=-1; jj < 2; jj++){
+            for(ii=-1; ii < 2; ii++){
+              if(((i+ii >= 0) && (i+ii < *nrow) && (j+jj >= 0) && (j+jj < *ncol))
+                 && ((ii != 0) || (jj != 0)) 
+                 && (dem[i+ii][j+jj] != exclude)) {
+                if((dem[i+ii][j+jj] > dem[i][j]) && (atb[i+ii][j+jj] < ZERO))
+                  not_yet = 1;
+              }
+            }
+          }
+
+          if(not_yet) continue;
+
+          /* if there are no upslope elements without a topidx value,
+             start calculations */
+
+          /* find the outflow direction and calculate the sum of weights using 
+             (tanb*countour length). Contour length = 0.5dx for the cardinal
+             direction and 0.354dx for diagonal */
+
+          sum = 0;
+          for(ii=0; ii<9; ii++){
+            tanb[ii] = 0;
+            routdem[ii] = 0;
+          }
+
+          k = 0;
+          sumtb = 0;
+          nrout = 0;
+          for(jj=-1; jj < 2; jj++){
+            for(ii=-1; ii < 2; ii++){
+              if(((i+ii >= 0) && (i+ii < *nrow) && (j+jj >= 0) && (j+jj < *ncol))
+                 && ((ii != 0) || (jj != 0)) 
+                 && (dem[i+ii][j+jj] != exclude)) {
+                if((ii == 0) || (jj == 0)) {
+                  dnx = dx1;
+                  routefac = 0.5;
+                } else {
+                  dnx = dx2;
+                  routefac = 0.5 / sqrt(2);
+                }
+                if(dem[i][j] - dem[i+ii][j+jj] > ZERO ) {
+                  tanb[k] = (dem[i][j] - dem[i+ii][j+jj]) * dnx;
+                  routdem[k] = routefac * *ew_res * tanb[k];
+                  sum += routdem[k];
+                  sumtb = sumtb + tanb[k];
+                  nrout++;
+                }
+              }
+              k++;
+            }
+          }
+        }
+
+	/* label 1 */
+
+	/* if a sink or a river cell... */
+
+        if((nrout == 0) || (river == 1)) {
 	  nsink++;
-	  sumtb=0.0;
-	  nslp=0;		// number of slopes
-	  if(i>0){
-	    if(j>0 &&
-	       map[i-1][j-1] >= -9000){
-	      	sumtb += (map[i-1][j-1]-map[i][j])*dx2;
-	      	nslp++;
-	    }
-	    if(map[i-1][j] >= -9000){
-	      	sumtb += (map[i-1][j]-map[i][j])*dx1;
-	      	nslp++;
-	    }
-	    if(j+1<*cols &&
-	       map[i-1][j+1] >= -9000){
-	      	sumtb += (map[i-1][j+1]-map[i][j])*dx2;
-	      	nslp++;
-	    }
-	  }
+          river = 0;
 
-	  if(j>0 &&
-	     map[i][j-1] >= -9000){
-	    	sumtb+=(map[i][j-1]-map[i][j])*dx1;
-	    	nslp++;
-	  }
-	  if(j+1<*cols &&
-	     map[i][j+1] >= -9000){
-	    	sumtb+=(map[i][j+1]-map[i][j])*dx1;
-	    	nslp++;
-	  }
-	  if(i+1<*rows){
-	    if(j>0 &&
-	       map[i+1][j-1] >= -9000){
-	      	sumtb+=(map[i+1][j-1]-map[i][j])*dx2;
-	      	nslp++;
-	    }
-	    if(map[i+1][j] >= -9000){
-	      sumtb+=(map[i+1][j]-map[i][j])*dx1;
-	      nslp++;
-	    }
-	    if(j+1<*cols &&
-	       map[i+1][j+1] >= -9000){
-	      	sumtb+=(map[i+1][j+1]-map[i][j])*dx2;
-	      	nslp++;
-	    }
-	  }
+          /* assume that there is a channel of length dx running midway through
+             the sink or boundary node. Take average inflow slope angle to
+             represent tanb and A/(2dx) to represent a */
 
-	  sumtb/=nslp;
-	  if(sumtb>ZERO){
-		atb[i][j]=log(a[i][j]/(2*dx*sumtb));
-	  }else{
-		atb[i][j] = -9999;
-	  }
-	  natb++;
-	  continue;
-	}
-				
-	C=a[i][j]/sum;
-	atb[i][j]=log(C); 
-/*	atb[i][j]=C; */
-	natb++;
+          sumtb = 0;
+          nslp = 0;
+          for(jj=-1; jj < 2; jj++){
+            for(ii=-1; ii < 2; ii++){
+              if(((i+ii >= 0) && (i+ii < *nrow) && (j+jj >= 0) && (j+jj < *ncol))
+                 && ((ii != 0) || (jj != 0)) 
+                 && (dem[i+ii][j+jj] != exclude)) {
+                if((ii == 0) || (jj == 0)) dnx = dx1;
+                else dnx = dx2;
+                if(rivermap[i][j] == 0) {
+                  /* for sink/boundary squares sumtb is just the average slope */
+                  sumtb += (dem[i+ii][j+jj] - dem[i][j]) * dnx;
+                  nslp++;
+                } else {
+                  /* for a river cell the slope is the average inflow slope */
+                  if(dem[i+ii][j+jj] > dem[i][j]) {
+                    sumtb += (dem[i+ii][j+jj] - dem[i][j]) * dnx;
+                    nslp++;
+                  }
+                }
+              }
+            }
+          }
 
-	if(i>0){
-	  if(j>0){
-	    a[i-1][j-1]+=C*route[0];
-	  }
-	  a[i-1][j]+=C*route[1];
-	  if(j+1<*cols){
-	    a[i-1][j+1]+=C*route[2];
-	  }
-	}
-	if(j>0){
-	  a[i][j-1]+=C*route[3];
-	}
-	if(j+1<*cols){
-	  a[i][j+1]+=C*route[5];
-	}
-	if(i+1<*rows){
-	  if(j>0){
-	    a[i+1][j-1]+=C*route[6];
-	  }
-	  a[i+1][j]+=C*route[7];
-	  if(j+1<*cols){
-	    a[i+1][j+1]+=C*route[8];
+          /* calculate the average inflow slope angle */
+
+          if(sumtb > ZERO) {
+            sumtb = sumtb / nslp;
+            atb[i][j] = log(area[i][j] / (2 * sumtb));
+            slope[i][j] = 2 * sumtb;
+          } else {
+            atb[i][j] = exclude;
+          }
+          natb++;
+          continue;
+        }
+
+        /*  so much for rivers and sinks. Go on with normal river cells
+            NOTE: no mechanism in place to remove negative atb values
+            Can be done in postprocessing */
+
+        if(sum > 0) {
+          c = area[i][j] / sum;
+          atb[i][j] = log(c);
+          slope[i][j] = sumtb / nrout;
+        } else {
+          c = 0;
+          atb[i][j] = 0.01;
+          slope[i][j] = 0;
+        }
+        natb++;
+
+        /* calculate downslope area */
+
+	nrout = 0;
+	for(jj=-1; jj < 2; jj++){
+	  for(ii=-1; ii < 2; ii++){
+	    if(((i+ii >= 0) && (i+ii < *nrow) && (j+jj >= 0) && (j+jj < *ncol))
+	       && ((ii != 0) || (jj != 0)) 
+	       && (atb[i+ii][j+jj] != exclude)) {
+	      if(routdem[nrout] > 0) area[i+ii][j+jj] += c * routdem[nrout];
+	    }
+	    nrout++;
 	  }
 	}
       }
     }
   }
-  Rprintf("\nNumber of sinks or boundaries: %i\n",nsink);
 
-  /* copy atb to output */
+  /*  Rprintf("\nNumber of sinks or boundaries: %i\n",nsink); */
 
-  for(i=0;i<*rows;i++){
-    for(j=0;j<*cols;j++){
-      topidxmap[j+(*cols)*i] = atb[i][j];
+  /* format output */
+
+  for(j=0; j < *ncol; j++){
+    for(i=0; i < *nrow; i++){
+      if(atb[i][j] == exclude) area[i][j] = exclude;
+      output[i + (*nrow * j)] = atb[i][j];
+      output[*nrow * *ncol + i + (*nrow * j)] = area[i][j];
     }
   }
-
   return;
 }
+
+
+
 

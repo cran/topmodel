@@ -1,7 +1,7 @@
 \name{NSeff}
 \alias{NSeff}
-\title{Nash-Sutcliffe efficiency}
-\description{Calculation of the Nash-Sutcliffe efficiency between an observed and simulated discharge series}
+\title{Calculation of the Nash-Sutcliffe efficiency}
+\description{Calculation of the Nash-Sutcliffe efficiency}
 \usage{NSeff(Qobs,Qsim)}
 
 \arguments{

@@ -10,6 +10,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
   misc.qt[i][nidxclass] = 0.0;
   misc.qo[i][nidxclass] = 0.0;
   misc.qv[i][nidxclass] = 0.0;
+  misc.Ea[i][nidxclass] = 0.0;
   misc.qs[i] = 0.0;
   misc.f[i] = rain[i];               /* By default all rain infiltrates */
   misc.fex[i] = 0.0;                 /* and therefore fex is zero */
@@ -56,7 +57,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
 
     misc.S[i][j] = misc.S_mean[i] + params.m * (misc.lambda - idxstats.atb[j]); /* (eq. 18.8) */
 
-/* rain first enters the root zone (written as deficit)	*/
+    /* rain first enters the root zone (written as deficit)	*/
 
     if(misc.S[i][j] < 0.0) misc.S[i][j] = 0.0;
     misc.Srz[i][j] -= misc.f[i];
@@ -69,8 +70,8 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
       misc.Srz[i][j] = 0.0;
     }
 
-/* if Suz exceeds S, then excess flow (ex) occurs (saturated overland flow)
-   S determines the storage capacity of Suz */
+    /* if Suz exceeds S, then excess flow (ex) occurs (saturated overland flow)
+       S determines the storage capacity of Suz */
 
     misc.ex[i][j] = 0.0;
     if(misc.Suz[i][j] > misc.S[i][j]){
@@ -138,6 +139,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
 
     misc.ex[i][nidxclass] += Aatb_r * misc.ex[i][j];  /* only for stats */
     misc.qt[i][j] = misc.qo[i][j] + misc.qs[i];	      /* only for stats */
+    misc.Ea[i][nidxclass] += Aatb_r * misc.Ea[i][j];  /* only for stats */
   }
 
 

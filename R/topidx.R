@@ -1,38 +1,40 @@
-topidx <- function(DEM, resolution) {
+topidx <- function(DEM, resolution, river=NA) {
 
-if(!is(DEM, "matrix"))
-	print("DEM should be a matrix")
+  ## data preparation
 
-else {
+  nrow <- dim(DEM)[1]
+  ncol <- dim(DEM)[2]
 
-#   ew_res <- DEM@grid@cellsize[1]
-#   ns_res <- DEM@grid@cellsize[2]
-   cols <- dim(DEM)[2]
-   rows <- dim(DEM)[1]
+  ## data checking
 
-# check for values below -9000
+  if(!is(DEM, "matrix"))
+    stop("The DEM should be a matrix")
+  if(min(as.vector(DEM)) < -9000)
+     stop("DEM contains unrealistic values (< -9000)")
+  if(!is.na(river) && !is(DEM, "matrix"))
+     stop("The river should be a matrix")
+  
+  if(is(river, "matrix") && (min(river) < 0))
+     stop("Error: the object 'river' should only contain positive values")
+  else river = rep(0,nrow*ncol)
 
-   if(length(DEM[DEM[!is.na(DEM)]< -8999]) != 0)
-	print("Check map for irrealistic values")
+  ## calling the function
 
-# replace NA's
+  result <- .C("topidx",
+               PACKAGE = "topmodel",
+               as.double(DEM),
+               as.integer(river),
+               as.integer(nrow),
+               as.integer(ncol),
+               as.double(resolution),
+               as.double(resolution),
+               result = double(length(DEM)*2))$result
 
-   DEM[is.na(DEM)] = -9999
+  ## formatting of the results
 
-   topidxmap <- .C("topidx",
-		PACKAGE = "topmodel",
-		as.double(t(DEM)),
-		as.integer(rows),
-		as.integer(cols),
-		as.double(resolution),
-		as.double(resolution),
-		topidxmap = double(rows*cols))$topidxmap
+  atb  <- matrix(result[1:(nrow*ncol)],nrow=nrow)
+  area <- matrix(result[(nrow*ncol+1):(nrow*ncol*2)],nrow=nrow)
 
-   topidxmap[topidxmap == -9999]<-NA
-   
-   topidxmap <- matrix(topidxmap, nrow = rows, ncol = cols, byrow=T)
+  return(list(atb = atb,area = area))
 
-   return(topidxmap)
-
-   }
 }

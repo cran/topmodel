@@ -10,7 +10,7 @@ void output(double *Qobs, double *result, int ntimestep, int iterations, int ver
 		for(j=0; j < ntimestep; j++){
 			result[i * ntimestep + j] = misc.Qt[j];
 		}
-		if(verbose == 5) {
+		if(verbose == 6) {
 			/* output qo */
 			start = ntimestep * iterations;
 			for(j=0; j < ntimestep; j++){
@@ -30,6 +30,11 @@ void output(double *Qobs, double *result, int ntimestep, int iterations, int ver
 			start = 4 * ntimestep * iterations;
 			for(j=0; j < ntimestep; j++){
 				result[start + i * ntimestep+j] = misc.fex[j];
+			}
+			/* output actual ET */
+			start = 5 * ntimestep * iterations;
+			for(j=0; j < ntimestep; j++){
+				result[start + i * ntimestep+j] = misc.Ea[j][nidxclass];
 			}
 		}
 	}

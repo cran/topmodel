@@ -63,7 +63,7 @@ void memory_allocation(int nch, int ntimestep, int nidxclass)
 		misc.Suz[i] = (double *) Calloc(nidxclass, double);
 
 		misc.S[i]  = (double *) Calloc(nidxclass, double);
-		misc.Ea[i] = (double *) Calloc(nidxclass, double);
+		misc.Ea[i] = (double *) Calloc((nidxclass + 1), double);
 		misc.ex[i] = (double *) Calloc((nidxclass + 1), double);
 
 		misc.qt[i] = (double *) Calloc((nidxclass + 1), double);
