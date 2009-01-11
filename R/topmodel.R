@@ -48,7 +48,7 @@ topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = N
                as.double(rain),
                as.double(ET0),
                as.double(Qobs),
-               as.integer(length(topidx)/2),
+               as.integer(length(as.double(as.matrix(topidx)))/2),
                as.integer(length(rain)),
                as.integer(iterations),
                as.integer(length(delay[,1])),
