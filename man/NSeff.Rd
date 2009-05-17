@@ -14,9 +14,9 @@
 }
 \value{}
 % \references{}
-\author{Wouter Buytaert, University of Bristol}
+\author{Wouter Buytaert, Imperial College London}
 \note{}
 
-% \seealso{\code{\link{topmodel.topmodel}}}
+\seealso{\code{\link{topmodel}}}
 \examples{}
 \keyword{models}

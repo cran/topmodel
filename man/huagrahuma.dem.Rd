@@ -2,8 +2,7 @@
 \docType{data}
 \alias{huagrahuma.dem}
 \title{DEM of the Huagrahuma catchment, Ecuador}
-\description{
-  Matrix containing a Digital Elevation Model of the Huagrahuma microcatchment, Ecuador
+\description{Matrix containing a Digital Elevation Model of the Huagrahuma microcatchment, Ecuador
 }
 \usage{huagrahuma.dem}
 %\format{}

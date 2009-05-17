@@ -10,7 +10,7 @@
 \details{}
 \value{The function returns a data matrix with 2 columns. Column \code{breaks} contains the upper limits of each class, while \code{counts} contains the number of elements}
 \references{}
-\author{Wouter Buytaert, University of Bristol}
+\author{Wouter Buytaert, Imperial College London}
 \note{}
 \seealso{\code{\link{topidx}}, \code{\link{topmodel}}}
 \examples{}

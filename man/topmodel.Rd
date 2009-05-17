@@ -58,10 +58,10 @@ Beven, K., 1984. Infiltration into a Class of Vertically Non-Uniform Soils. Hydr
 
 See also \url{http://source.ggy.bris.ac.uk/wiki/Hydrology_in_R} for a more examples on how to run topmodel in R.
 }
-\author{Wouter Buytaert, University of Bristol}
+\author{Wouter Buytaert, Imperial College London}
 \note{}
 
-% \seealso{\code{\link{print}}}
+\seealso{\code{\link{topidx}}}
 \examples{
 data(huagrahuma)
 attach(huagrahuma)
@@ -69,7 +69,8 @@ attach(huagrahuma)
 ## returns the simulated runoff (Qobs not given)
 Qsim <- topmodel(parameters,topidx,delay,rain,ET0)
 
-## returns a list of simulated runoff (Qobs), overland flow (qo), subsurface flow (qs) and storage (S):
+## returns a list of simulated runoff (Qobs), overland flow (qo),
+## subsurface flow (qs) and storage (S):
 topmodel(parameters,topidx,delay,rain,ET0,verbose = TRUE)
 
 ## plot observed and simulated discharge:
