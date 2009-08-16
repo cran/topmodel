@@ -18,5 +18,5 @@
 \note{}
 
 \seealso{\code{\link{topmodel}}}
-\examples{}
+%\examples{}
 \keyword{models}

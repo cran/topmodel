@@ -1,4 +1,4 @@
-topidx <- function(DEM, resolution, river=NA) {
+topidx <- function(DEM, resolution, river=NULL) {
 
   ## data preparation
 
@@ -7,14 +7,13 @@ topidx <- function(DEM, resolution, river=NA) {
 
   ## data checking
 
+  stopifnot(is(DEM, "matrix"),(is(river,"matrix") || is.null(river)))
+
   if(min(as.vector(DEM[!is.na(DEM)])) < -9000)
      stop("DEM contains unrealistic values (< -9000)")
-  if(!is.na(river) && !is(DEM, "matrix"))
-     stop("The river and DEM should both be a matrix")
   
-  if(is(river, "matrix") && (min(river) < 0))
-     stop("Error: the object 'river' should only contain positive values")
-  else river = rep(0,nrow*ncol)
+  if(is.null(river)) { river = rep(0,nrow*ncol)
+  } else { if(min(river) < 0) stop("Error: the object 'river' should only contain positive values") }
 
   DEM[is.na(DEM)] <- -9999
 

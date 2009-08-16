@@ -2,7 +2,7 @@
 \alias{topmodel}
 \title{implementation of the hydrological model TOPMODEL}
 \description{
-  This is an implementation of the 1995 Fortran version of TOPMODEL by Keith Beven.
+  Implementation of the 1995 Fortran version of TOPMODEL by Keith Beven.
 }
 \usage{
 topmodel(parameters, topidx, delay, rain,ET0,verbose = F, Qobs=NA)
@@ -19,7 +19,7 @@ topmodel(parameters, topidx, delay, rain,ET0,verbose = F, Qobs=NA)
 \details{
 topmodel() automatically implements a Monte Carlo simulation. If the parameter argument is a single vector, the model is run once. If the parameter argument is a matrix, each row should represent a parameter set. In that case, the model is run with each parameter set (see the examples below).
 
-A single parameter set consists of: \code{c(qs0,lnTe,m,Sr0,SrMax,td,vch,vr,k0,psi,dtheta,dt)}, with:
+A single parameter set consists of: \code{c(qs0,lnTe,m,Sr0,SrMax,td,vch,vr,k0,CD,dt)}, with:
 
 \tabular{ll}{
 qs0 \tab Initial subsurface flow per unit area [m]\cr
@@ -56,10 +56,10 @@ Beven K, Lamb R, Quinn P, Romanowicz R, Freer J, 1995. TOPMODEL. In: Sing VP (Ed
 Morel-Seytoux, H.J., Khanji, J., 1974. Derivation of an Equation of Infiltration. Water Resources Research, 10, 795-800.
 Beven, K., 1984. Infiltration into a Class of Vertically Non-Uniform Soils. Hydrological Sciences Journal 29, 425-434.
 
-See also \url{http://source.ggy.bris.ac.uk/wiki/Hydrology_in_R} for a more examples on how to run topmodel in R.
+See also \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for a more examples on how to run topmodel in R.
 }
 \author{Wouter Buytaert, Imperial College London}
-\note{}
+% \note{}
 
 \seealso{\code{\link{topidx}}}
 \examples{
@@ -69,9 +69,8 @@ attach(huagrahuma)
 ## returns the simulated runoff (Qobs not given)
 Qsim <- topmodel(parameters,topidx,delay,rain,ET0)
 
-## returns a list of simulated runoff (Qobs), overland flow (qo),
-## subsurface flow (qs) and storage (S):
-topmodel(parameters,topidx,delay,rain,ET0,verbose = TRUE)
+## returns a list of simulated runoff (Qobs), overland flow (qo), subsurface flow (qs) and storage (S):
+Qsim <- topmodel(parameters,topidx,delay,rain,ET0,verbose = TRUE)
 
 ## plot observed and simulated discharge:
 plot(Qobs)

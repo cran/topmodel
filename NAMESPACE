@@ -1,7 +1,12 @@
 useDynLib(topmodel)
 
 export(topmodel,
-      make.classes,
-      topidx,
-      NSeff,
-      infiltration)
+       make.classes,
+       topidx,
+       NSeff,
+       infiltration,
+       flowlength,
+       outlet,
+       river,
+       sinkfill,
+       subcatch)

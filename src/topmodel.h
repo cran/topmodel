@@ -40,7 +40,6 @@ GLOBAL	struct
 GLOBAL	struct
 {
 	double	qs0, lnTe, m, Sr0, Srmax, td, vch, vr, n;
-	int	infex;
 	double	K0, CD, dt;
 	/* channel parameters */
 	double	*d, *Ad_r;

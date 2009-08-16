@@ -3,11 +3,11 @@
 \title{Calculation of the topographic index from a DEM raster}
 \description{Calculation of the topographic index from a DEM raster}
 \usage{
-topidx(DEM, resolution, river = NA)
+topidx(DEM, resolution, river = NULL)
 }
 \arguments{
-  \item{DEM}{A matrix representing a DEM with equally sized pixels and equal NS and EW resolution}
-  \item{resolution}{Resolution of the DEM (m)}
+  \item{DEM}{A matrix representing a digital elevation model with equally sized pixels and equal NS and EW resolution}
+  \item{resolution}{Resolution of the digital (m)}
   \item{river}{A matrix representing a river map (optional). All cells with values higher than 0 will be treated as river cells.}
 }
 \details{The river map should not contain negative values}

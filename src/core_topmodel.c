@@ -1,3 +1,8 @@
+
+
+
+
+
 #include "topmodel.h"
 
 void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep)
@@ -17,13 +22,11 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
 
   /* calculate infiltration and redirect any excess infiltration to fex */
 
-  if(params.infex){
-    misc.f[i] = params.dt * get_f((i + 1) * params.dt, rain[i] / params.dt,
+  misc.f[i] = params.dt * get_f((i + 1) * params.dt, rain[i] / params.dt,
 				  params.CD, params.K0, params.m, params.dt);
-    if(misc.f[i]<0) misc.f[i] = rain[i];
-    /* necessary? -> yes! but would be good to find out why ...*/
-    misc.fex[i] = rain[i] - misc.f[i];
-  }
+  if(misc.f[i]<0) misc.f[i] = rain[i];
+  /* necessary? -> yes! but would be good to find out why ...*/
+  misc.fex[i] = rain[i] - misc.f[i];
 
   /* Srz = Root zone storage deficit
      Suz = Unsaturated (gravity drainage) zone storage */
@@ -35,7 +38,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
     }
   }
 
-  misc.qs[i] = misc.qss * exp(- misc.S_mean[i] / params.m);	/* eq. 18.16 */
+  misc.qs[i] = misc.qss * exp(- misc.S_mean[i] / params.m);	/* eq. 6.33 */
 
 /* qs = Subsurface flow per unit area
    qss = saturated zone flow = exp(-gamma) = exp(lnTe-lambda) */
@@ -82,7 +85,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
     /* - qv is vertical flow = unsaturated subsurface flow
        - misc.td can be unsaturated zone time delay (td)
          or Effective vertical hydraulic gradient (alpha), depending whether > or < 0
-         if td then eq. 18.11; if alpha then eq. 18.12
+         if td then eq. 6.26; if alpha then eq. 18.12 from Beven et al., 1995
        - qv limited to the Suz */
 
     _qv = 0.0;
@@ -103,7 +106,7 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
     misc.qv[i][j] = _qv;
     misc.qv[i][nidxclass] += misc.qv[i][j];
 
-    /* Calculation of ET -> eq. 18.13
+    /* Calculation of ET -> eq. 6.27
        ET is extracted from the root zone   */
 
     misc.Ea[i][j] = 0.0;

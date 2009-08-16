@@ -12,10 +12,10 @@
 
   \tabular{ll}{
     delay      \tab Cumulative delay function of the catchment\cr
-    ET0        \tab Reference evapotranspiration (mm / 15 min)\cr
+    ET0        \tab Reference evapotranspiration [mm / 15 min]\cr
     parameters \tab Values for the TOPMODEL parameters\cr
-    Qobs       \tab Observed discharge (mm / 15 min)\cr
-    rain       \tab Observed precipitation (mm / 15 min)\cr
+    Qobs       \tab Observed discharge [mm / 15 min]\cr
+    rain       \tab Observed precipitation [mm / 15 min]\cr
   }
 }
 \usage{huagrahuma}
@@ -23,7 +23,7 @@
 %\source{}
 \references{
   Buytaert, W., De Bievre, B., Wyseure, G., Deckers, J., 2005. The effect of land use changes on the hydrological
-  behaviour of Histic Andosols in south Ecuador. Hydrological Processes 19: 3985 - 3997
+  behaviour of Histic Andosols in south Ecuador. Hydrological Processes 19: 3985 - 3997.
 }
 \keyword{datasets}
 

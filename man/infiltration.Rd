@@ -31,7 +31,7 @@ Beven, K., 1984. Infiltration into a Class of Vertically Non-Uniform Soils. Hydr
 
 See also \url{http://source.ggy.bris.ac.uk/wiki/Hydrology_in_R} for examples.
 }
-\author{Wouter Buytaert, Imperial College London}
+\author{Wouter Buytaert, University of Bristol}
 \note{}
 
 \seealso{\code{\link{topmodel}}}

@@ -18,8 +18,6 @@ void param_init(double *parameters, double *delay, int nch, int iteration, int n
 	params.CD     = parameters[9 + nparam*iteration];
 	params.dt     = parameters[10+ nparam*iteration];
 
-	params.infex = 1;	/* flag whether infiltration excess should be calculated */
-
 /* reading delay function */
 
 	for(i=0; i<nch; i++){
@@ -33,13 +31,20 @@ void param_init(double *parameters, double *delay, int nch, int iteration, int n
 	misc.vr     = params.vr * params.dt;
 	misc.qs0    = params.qs0 * params.dt;
 	misc.qss    = exp(misc.lnTe - misc.lambda);
-	
-/*    lnTe = Areal average of ln(T0) = eq. 18.7
-      lnTe = lnTe + log(dt)  -> lnTe = ln(Te*dt) */
+
+/* Initialisation functions:
+ *
+ * 1. LnTe (Areal average of ln(T0) = eq. 6.21c):
+ *    ln(Te*dt) = lnTe + log(dt)
+ *
+ * 2. qss (discharge when S_mean is zero, i.e. saturation:
+ *    qss = exp(-gamma)   (see Beven 2000 p. 212)
+ *    and gamma = lambda - lnTe
+ */
 
 	get_Ad(nch); 
 
-/* initialisation of S_mean by means of eq. 18.16 */
+/* initialisation of S_mean by means of eq. 6.33 */
 
 	misc.S_mean[0] = - params.m * log(misc.qs0 / misc.qss);
 
