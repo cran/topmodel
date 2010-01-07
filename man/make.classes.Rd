@@ -7,11 +7,11 @@
   \item{array}{A vector of numeric values}
   \item{n}{Number of breaks}
 }
-\details{}
+%\details{}
 \value{The function returns a data matrix with 2 columns. Column \code{breaks} contains the upper limits of each class, while \code{counts} contains the number of elements}
-\references{}
+%\references{}
 \author{Wouter Buytaert, Imperial College London}
-\note{}
+%\note{}
 \seealso{\code{\link{topidx}}, \code{\link{topmodel}}}
-\examples{}
+%\examples{}
 \keyword{models}

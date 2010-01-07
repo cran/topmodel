@@ -12,11 +12,11 @@
 }
 %\details{}
 \value{A binary matrix of the same size as \code{DEM}.}
-\references{See \url{http://source.ggy.bris.ac.uk/wiki/Hydrology_in_R} for examples.}
+\references{See \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
 
 \author{Wouter Buytaert, Imperial College London, based on an implementation from the Hydrology Group of Lancaster University}
 %\note{}
 
-\seealso{}
+\seealso{\code{\link{topmodel}}}
 %\examples{}
 %\keyword{}

@@ -12,10 +12,10 @@
 \details{
   Qobs and Qsim should have the same dimensions. Both can contain NA values.
 }
-\value{}
+%\value{}
 % \references{}
 \author{Wouter Buytaert, Imperial College London}
-\note{}
+%\note{}
 
 \seealso{\code{\link{topmodel}}}
 %\examples{}

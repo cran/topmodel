@@ -8,8 +8,8 @@
 void flowlength(double *inputdem, double *output, int *nrow, int *ncol, int *iout, int *jout)
 {
   int i,j,ii,jj,i2,j2,k,idown,jdown,orig_i,orig_j,flowlength,endflow;
-  int flowi[(*nrow) * (*ncol)], flowj[*nrow * *ncol];
-  double distance[*nrow * *ncol];
+  int *flowi, *flowj;
+  double *distance;
   double max,div,divdown,exclude;
   double **flowmap, **dem;
   int no_outlet = 0;
@@ -17,10 +17,14 @@ void flowlength(double *inputdem, double *output, int *nrow, int *ncol, int *iou
   if(*iout < 0) no_outlet = 1;
 
   /* memory allocation */
-          
-  dem   = (double **) R_alloc(*nrow, sizeof(double *));
-  flowmap = (double **) R_alloc(*nrow, sizeof(double *));
 
+  flowi    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int *));
+  flowj    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int *)); 
+  distance = (double *) R_alloc((*nrow) * (*ncol), sizeof(double *)); 
+                
+  dem      = (double **) R_alloc(*nrow, sizeof(double *));
+  flowmap  = (double **) R_alloc(*nrow, sizeof(double *));
+ 
   for(i=0; i<*nrow; i++){
     dem[i]   = (double *) R_alloc(*ncol, sizeof(double));
     flowmap[i]   = (double *) R_alloc(*ncol, sizeof(double));
