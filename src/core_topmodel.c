@@ -83,21 +83,15 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
     }
 
     /* - qv is vertical flow = unsaturated subsurface flow
-       - misc.td can be unsaturated zone time delay (td)
-         or Effective vertical hydraulic gradient (alpha), depending whether > or < 0
-         if td then eq. 6.26; if alpha then eq. 18.12 from Beven et al., 1995
+       - unsaturated zone time delay: eq. 6.26;
        - qv limited to the Suz */
 
     _qv = 0.0;
     if(misc.S[i][j] > 0.0){
-      _qv = (params.td > 0.0 ?
-	     misc.Suz[i][j] / (misc.S[i][j] * params.td) * params.dt
-	     : - params.td * params.K0 * exp(- misc.S[i][j] / params.m));
-      if(_qv > misc.Suz[i][j])
-	_qv = misc.Suz[i][j];
+      _qv = misc.Suz[i][j] / (misc.S[i][j] * params.td) * params.dt;
+      if(_qv > misc.Suz[i][j]) _qv = misc.Suz[i][j];
       misc.Suz[i][j] -= _qv;
-      if(misc.Suz[i][j] < ZERO)
-	misc.Suz[i][j] = 0.0;
+      if(misc.Suz[i][j] < ZERO) misc.Suz[i][j] = 0.0;
       _qv *= Aatb_r;
     }
 

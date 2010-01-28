@@ -27,7 +27,7 @@ lnTe 	\tab log of the areal average of T0 [m2/h]\cr
 m	\tab Model parameter controlling the rate of decline of transmissivity in the soil profile, see Beven, 1984\cr
 Sr0 	\tab Initial root zone storage deficit [m]\cr
 Srmax 	\tab Maximum root zone storage deficit [m]\cr
-td 	\tab Unsaturated zone time delay per unit storage deficit\cr
+td 	\tab Unsaturated zone time delay per unit storage deficit [h/m]\cr
 vch 	\tab channel flow outside the catchment catchment [m/h]\cr
 vr 	\tab channel flow inside catchment [m/h]\cr
 k0 	\tab Surface hydraulic conductivity [m/h]\cr
@@ -37,9 +37,9 @@ dt 	\tab The timestep [h]\cr
 
 The topidx dataframe can be derived conveniently with \code{make.classes()}. It should contain 2 columns. The first column should give the lower boundary of each topographic index class, and the second column should give the respective area fraction. The second column must sum to 1.
 
-Parameters k0 is only used in the unsaturated zone time delay funtion if td<0. psi and dtheta are currently not used, because the infiltration excess module is not yet functional.
+k0 and CD are used only for the infiltration excess routine. Set K0 to zero to avoid infiltration excess overland flow
 
-Overland flow is routed through a delay function which represents the time spent in the channel system. The parameter \code{delay} is used for this. Delay is a matrix with 2 columns. The first column gives the cumulative relative area. The second column gives the average distance towards the outlet (m).
+Flow is routed through a delay function which represents the time spent in the channel system. The parameter \code{delay} is used for this. Delay is a matrix with 2 columns. The first column gives the cumulative relative area. The second column gives the average distance towards the outlet (m).
 
 }
 \value{
@@ -85,7 +85,7 @@ lnTe  <- runif(runs)*3-2
 m     <- runif(runs)*0.2
 Sr0   <- runif(runs)*0.02
 Srmax <- runif(runs)*2
-td    <- runif(runs)*3-3
+td    <- runif(runs)*3
 vch   <- 1000
 vr    <- 100+runif(runs)*2400
 k0    <- runif(runs)*0.01

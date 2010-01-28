@@ -18,9 +18,9 @@ void flowlength(double *inputdem, double *output, int *nrow, int *ncol, int *iou
 
   /* memory allocation */
 
-  flowi    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int *));
-  flowj    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int *)); 
-  distance = (double *) R_alloc((*nrow) * (*ncol), sizeof(double *)); 
+  flowi    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int));
+  flowj    = (int *) R_alloc((*nrow) * (*ncol), sizeof(int)); 
+  distance = (double *) R_alloc((*nrow) * (*ncol), sizeof(double)); 
                 
   dem      = (double **) R_alloc(*nrow, sizeof(double *));
   flowmap  = (double **) R_alloc(*nrow, sizeof(double *));
