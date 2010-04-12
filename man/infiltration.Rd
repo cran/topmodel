@@ -8,7 +8,7 @@
   infiltration(rain, parameters)
 }
 \arguments{
-  \item{rain}{A vector of rain data (m per time unit dt)}
+  \item{rain}{A vector of rain data (m per timestep)}
   \item{parameters}{A vector containing 3 parameters (see below for the exact structure)}
 }
 \details{
@@ -29,9 +29,9 @@ The function returns a vector with the same length as the input vector rain repr
 \references{Morel-Seytoux, H.J., Khanji, J., 1974. Derivation of an Equation of Infiltration. Water Resources Research, 10, 795-800.
 Beven, K., 1984. Infiltration into a Class of Vertically Non-Uniform Soils. Hydrological Sciences Journal 29, 425-434.
 
-See also \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.
+See also \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.
 }
-\author{Wouter Buytaert, Imperial College London}
+\author{Wouter Buytaert, Imperial College London, based on original FORTRAN code from Lancaster University}
 %\note{}
 
 \seealso{\code{\link{topmodel}}}

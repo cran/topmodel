@@ -15,7 +15,7 @@ For deep sinks or large maps, it may be possible that not all sinks are filled i
 }
 \value{A matrix of the same size as the DEM.}
 
-\references{See \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
+\references{See \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
 
 \author{Wouter Buytaert, Imperial College London, based on an implementation from the Hydrology Group of Lancaster University}
 

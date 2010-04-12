@@ -12,7 +12,7 @@
 }
 %\details{}
 \value{A binary matrix of the same size as \code{DEM}.}
-\references{See \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
+\references{See \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
 
 \author{Wouter Buytaert, Imperial College London, based on an implementation from the Hydrology Group of Lancaster University}
 %\note{}

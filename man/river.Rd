@@ -18,12 +18,12 @@
   \item{tharea}{A drainage threshold for headwater cells}
 }
 \details{
-If thatb or tharea are exceeded in the respective maps, cells are identified as headwater cells. The routine then traces down rivers from these cells based on a D8 algorithm and calculates the distance towards the outlet. Outlets are recognized by sinks, map borders or excluded areas (NA). The \code{subcatch} function can be used to set areas outside the target catchment to NA.
+Cells that exceed thatb or tharea in the respective maps are identified as headwater cells. The routine then traces down rivers from these cells based on a D8 algorithm and calculates the distance towards the outlet. Outlets are recognized by sinks, map borders or excluded areas (NA). The \code{subcatch} function can be used to set areas outside the target catchment to NA.
 }
 
 \value{A matrix of the same size as DEM.}
 
-\references{See \url{http://wiki.r-project.org/rwiki/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
+\references{See \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
 
 \author{Wouter Buytaert, Imperial College London, based on an implementation from the Hydrology Group of Lancaster University}
 %\note{}

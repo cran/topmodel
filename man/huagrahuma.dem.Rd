@@ -3,7 +3,7 @@
 \alias{huagrahuma.dem}
 \title{DEM of the Huagrahuma catchment, Ecuador}
 \description{
-  Matrix containing a Digital Elevation Model of the Huagrahuma microcatchment, Ecuador
+  Matrix containing a Digital Elevation Model of the Huagrahuma microcatchment, Ecuador, at 25 m resolution.
 }
 \usage{huagrahuma.dem}
 %\format{}

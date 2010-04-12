@@ -4,7 +4,7 @@
 \description{This function splits a dataset in n evenly distributed classes and calculates the number of elements of each class. It is very similar to \code{hist()}, but \code{hist()} does not always keep the number of breaks requested}
 \usage{make.classes(array,n)}
 \arguments{
-  \item{array}{A vector of numeric values}
+  \item{array}{A numeric vector or matrix}
   \item{n}{Number of breaks}
 }
 %\details{}

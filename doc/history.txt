@@ -1,4 +1,17 @@
 
+0.7.2-1
+-----
+
+- adapt topmodel example code to bugfix in R 2.11.0
+
+0.7.2
+-----
+
+- memory allocation bugfix in flowlength.c
+- change weblink to R wiki
+
+0.7.1
+-----
 
 0.7
 ---
