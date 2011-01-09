@@ -1,7 +1,6 @@
 river <- function(DEM,atb,area,res,thatb,tharea) {
 
   ## data preparation
-
   stopifnot(is(DEM,"matrix"),is(atb,"matrix"),is(area,"matrix"))
 
   if(min(as.vector(DEM[!is.na(DEM)])) < -9000)
@@ -21,7 +20,6 @@ river <- function(DEM,atb,area,res,thatb,tharea) {
   ncol <- dim(DEM)[2]
 
   ## calling the function
-
   result <- .C("findrivers",
                PACKAGE = "topmodel",
                as.double(DEM),

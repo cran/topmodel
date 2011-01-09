@@ -34,8 +34,8 @@ topidx <- function(DEM, resolution, river=NULL) {
   atb  <- matrix(result[1:(nrow*ncol)],nrow=nrow)
   area <- matrix(result[(nrow*ncol+1):(nrow*ncol*2)],nrow=nrow)
 
-  atb[atb < -9000] <- NA
-  area[area < -9000] <- NA
+  atb[atb < -9] <- NA
+  area[area < -9] <- NA
 
   return(list(atb = atb,area = area))
 

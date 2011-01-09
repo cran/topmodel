@@ -45,7 +45,7 @@ Flow is routed through a delay function which represents the time spent in the c
 \value{
 The function returns an array of observed discharges. If more than one parameter set is given, a matrix is returned, with each column representing a discharge set coinciding with the parameter sets. If Qobs is given, the function returns an array of Nash-Sutcliffe efficiencies, 1 for each parameter sets.
 
-If verbose output is requested, a list is returned, with the modelled discharge (Q), overland flow (qo), subsurface flow (qs), storage (S), infiltration excess overland flow (fex), and actual evapotranspiration (Ea) for each time step.
+If verbose output is requested, a list is returned, with the modelled discharge (Q), overland flow (qo), subsurface flow (qs), storage deficit (S), infiltration excess overland flow (fex), and actual evapotranspiration (Ea) for each time step.
 
 Be aware that invoking \code{topmodel()} without Q for a large number of runs, may require a large amount of memory.
 }

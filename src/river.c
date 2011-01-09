@@ -17,26 +17,29 @@
 #include <R.h>
 
 void findrivers(double *inputdem, double *inputtopidx, double *inputarea,
-		double *outputriver, int *nrow, int *ncol, double *cellsize, double *thtopidx,
-		double *tharea)
+		double *outputriver, int *nrow, int *ncol, double *cellsize,
+		double *thtopidx, double *tharea)
 {
 
   int i,j,k,idown,jdown,river_origin_i,river_origin_j,endriver,nriv;
   int ii,jj,i2,j2,headwater;
-  int riveri[(*nrow) * (*ncol)], riverj[*nrow * *ncol];
-  
+  int *riveri, *riverj;
+
   double max, addist, exclude, dist3;
-  double dist[(*nrow) * (*ncol)];
-  double **dem, **atb, **area, **river;
+  double **dem, **atb, **area, **river, *dist;
 
   /* memory allocation */
+
+  riveri= (double *) R_alloc((*nrow) * (*ncol), sizeof(int));
+  riverj= (double *) R_alloc((*nrow) * (*ncol), sizeof(int));
+  dist  = (double *) R_alloc((*nrow) * (*ncol), sizeof(double));
           
   dem   = (double **) R_alloc(*nrow, sizeof(double *));
   atb   = (double **) R_alloc(*nrow, sizeof(double *));
   area  = (double **) R_alloc(*nrow, sizeof(double *));
   river = (double **) R_alloc(*nrow, sizeof(double *));
 
-  for(i=0; i<*nrow; i++){
+  for(i = 0; i < *nrow; i++){
     dem[i]   = (double *) R_alloc(*ncol, sizeof(double));
     atb[i]   = (double *) R_alloc(*ncol, sizeof(double));
     area[i]  = (double *) R_alloc(*ncol, sizeof(double));
