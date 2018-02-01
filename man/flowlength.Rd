@@ -20,7 +20,7 @@ The function returns the flowlength in cell size units. So you have to multiply 
 
 \value{A matrix of the same size as \code{DEM}}
 
-\references{See \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
+\references{See \url{http://paramo.cc.ic.ac.uk/topmodel_tutorial} for examples.}
 \author{Wouter Buytaert, Imperial College London, based on an implementation from the Hydrology Group of Lancaster University}
 %\note{}
 \seealso{sinkfill, river}

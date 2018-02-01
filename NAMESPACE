@@ -1,4 +1,6 @@
-useDynLib(topmodel)
+useDynLib(topmodel, .registration = TRUE)
+
+importFrom("methods", "is")
 
 export(topmodel,
        make.classes,

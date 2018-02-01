@@ -4,7 +4,7 @@
 #include <math.h>
 #include <R.h>
 
-void sinkfill(double *input, double *output, int *nrow, int *ncol, double *cellsize, double *degree)
+void c_sinkfill(double *input, double *output, int *nrow, int *ncol, double *cellsize, double *degree)
 {
 
   int	numsin, i, j, xloc, yloc, sinkflag;

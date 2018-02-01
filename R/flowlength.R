@@ -28,7 +28,7 @@ flowlength <- function(DEM,outlet = NA) {
 
   ## calling the function
 
-  result <- .C("flowlength",
+  result <- .C("c_flowlength",
                PACKAGE = "topmodel",
                as.double(DEM),
                result = double(nrow*ncol),

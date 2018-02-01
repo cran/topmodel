@@ -1,6 +1,6 @@
 #include "topmodel.h"
 
-void infiltration(double *rain,
+void c_infiltration(double *rain,
                   double *parameters,
                   int *ntimestep,
                   double *result)

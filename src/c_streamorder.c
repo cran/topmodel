@@ -5,7 +5,7 @@
 #include <math.h>
 #include <R.h>
 
-void streamorder(double *inputdem, double *output, int *nrow, int *ncol,
+void c_streamorder(double *inputdem, double *output, int *nrow, int *ncol,
                                                         int *iout, int *jout)
 {
 

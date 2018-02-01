@@ -5,7 +5,7 @@
 #include <math.h>
 #include <R.h>
 
-void subcatch(double *inputdem, int *output, int *nrow, int *ncol, int *iout, int *jout)
+void c_subcatch(double *inputdem, int *output, int *nrow, int *ncol, int *iout, int *jout)
 {
   int i,j,ii,jj,exclude,i2,j2,endflow;
   int idown,jdown,origin_i,origin_j,flowlength;

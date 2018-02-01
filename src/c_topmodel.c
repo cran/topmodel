@@ -2,11 +2,11 @@
 #include "topmodel.h"
 #undef	MAIN
 
-void topmodel(double *parameters,
+void c_topmodel(double *parameters,
 	     double *topidx,
              double *delay,
 	     double *rain,
-	     double *ET0,
+	     double *ETp,
 	     double *Qobs,
 	     int *nidxclass,
 	     int *ntimestep,
@@ -37,7 +37,7 @@ void topmodel(double *parameters,
 		/* run the model for each time step */
 
 		for(j=0; j<*ntimestep; j++)
-			run_topmodel(rain,ET0,*nidxclass,j,*ntimestep);
+			run_topmodel(rain,ETp,*nidxclass,j,*ntimestep);
 
 		/* write outputs */
 

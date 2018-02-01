@@ -5,14 +5,14 @@
   Implementation of the 1995 Fortran version of TOPMODEL by Keith Beven.
 }
 \usage{
-topmodel(parameters, topidx, delay, rain, ET0, verbose = F, Qobs=NA)
+topmodel(parameters, topidx, delay, rain, ETp, verbose = F, Qobs=NA)
 }
 \arguments{
   \item{parameters}{A vector or a matrix containing the input parameters (see below for the exact structure)}
   \item{topidx}{A 2 column matrix with respectively the topographic index classes and values (see below for the exact structure)}
   \item{delay}{Delay function for overland flow (see below)}
   \item{rain}{A vector of rain data (m per timestep)}
-  \item{ET0}{A vector of ET0 data (m per timestep)}
+  \item{ETp}{A vector of potential evapotranspiration data (m per timestep)}
   \item{verbose}{If set to TRUE, returns besides predicted discharge also overland flow, base flow and saturated zone storage}
   \item{Qobs}{If Qobs is given, normal output is suppressed and only the Nash and Sutcliffe efficiency is returned (m per timestep)}
 }
@@ -56,7 +56,7 @@ Beven K, Lamb R, Quinn P, Romanowicz R, Freer J, 1995. TOPMODEL. In: Sing VP (Ed
 Morel-Seytoux, H.J., Khanji, J., 1974. Derivation of an Equation of Infiltration. Water Resources Research, 10, 795-800.
 Beven, K., 1984. Infiltration into a Class of Vertically Non-Uniform Soils. Hydrological Sciences Journal 29, 425-434.
 
-See also \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for a more examples on how to run topmodel in R.
+See also \url{http://paramo.cc.ic.ac.uk/topmodel_tutorial} for a more examples on how to run topmodel in R.
 }
 \author{Wouter Buytaert, Imperial College London}
 % \note{}
@@ -67,10 +67,10 @@ data(huagrahuma)
 attach(huagrahuma)
 
 ## returns the simulated runoff (Qobs not given)
-Qsim <- topmodel(parameters, topidx, delay, rain, ET0)
+Qsim <- topmodel(parameters, topidx, delay, rain, ETp)
 
 ## returns a list of simulated runoff (Q), overland flow (qo), subsurface flow (qs) and storage (S):
-Qsim <- topmodel(parameters, topidx, delay, rain,ET0, verbose = TRUE)
+Qsim <- topmodel(parameters, topidx, delay, rain,ETp, verbose = TRUE)
 
 ## plot observed and simulated discharge:
 plot(Qobs)
@@ -95,7 +95,7 @@ dt    <- 0.25
 parameters<-cbind(qs0,lnTe,m,Sr0,Srmax,td,vch,vr,k0,CD,dt)
 
 ## returns an array of 10 Nash Sutcliffe efficiencies; one for each parameter set:
-result<-topmodel(parameters, topidx, delay, rain, ET0, Qobs = Qobs)
+result<-topmodel(parameters, topidx, delay, rain, ETp, Qobs = Qobs)
 
 }
 \keyword{models}

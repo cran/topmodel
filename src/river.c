@@ -30,8 +30,8 @@ void findrivers(double *inputdem, double *inputtopidx, double *inputarea,
 
   /* memory allocation */
 
-  riveri= (double *) R_alloc((*nrow) * (*ncol), sizeof(int));
-  riverj= (double *) R_alloc((*nrow) * (*ncol), sizeof(int));
+  riveri= (int *) R_alloc((*nrow) * (*ncol), sizeof(int));
+  riverj= (int *) R_alloc((*nrow) * (*ncol), sizeof(int));
   dist  = (double *) R_alloc((*nrow) * (*ncol), sizeof(double));
           
   dem   = (double **) R_alloc(*nrow, sizeof(double *));

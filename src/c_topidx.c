@@ -8,7 +8,7 @@
 
 #define	ZERO		0.0000001
 
-void topidx(double *inputdem,
+void c_topidx(double *inputdem,
 	    int    *inputriver,
 	    int    *nrow, 
 	    int    *ncol,

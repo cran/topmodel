@@ -2,7 +2,7 @@
 \docType{data}
 \alias{huagrahuma}
 \alias{delay}
-\alias{ET0}
+\alias{ETp}
 \alias{parameters}
 \alias{rain}
 \alias{Qobs}
@@ -12,7 +12,7 @@
 
   \tabular{ll}{
     delay      \tab Cumulative delay function of the catchment\cr
-    ET0        \tab FAO Penman Monteith reference evapotranspiration [m / 15 min]\cr
+    ETp        \tab FAO Penman Monteith potential evapotranspiration [m / 15 min]\cr
     parameters \tab Values for the TOPMODEL parameters\cr
     Qobs       \tab Observed discharge [m / 15 min]\cr
     rain       \tab Observed precipitation [m / 15 min]\cr

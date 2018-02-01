@@ -12,7 +12,7 @@ topidx(DEM, resolution, river = NULL)
 }
 \details{The river map should not contain negative values}
 \value{The function returns a list, containing 2 rasters. Atb are the topographic index values of each grid cell. Area contains the contributing area}
-\references{See \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis} for examples.}
+\references{See \url{http://paramo.cc.ic.ac.uk/topmodel_tutorial} for examples.}
 \author{Wouter Buytaert, Imperial College London, based on routines developed by the hydrology group of Lancaster University}
 %\note{}
 

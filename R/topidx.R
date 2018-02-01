@@ -19,7 +19,7 @@ topidx <- function(DEM, resolution, river=NULL) {
 
   ## calling the function
 
-  result <- .C("topidx",
+  result <- .C("c_topidx",
                PACKAGE = "topmodel",
                as.double(DEM),
                as.integer(river),

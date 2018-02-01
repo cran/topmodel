@@ -15,7 +15,7 @@ sinkfill <- function(DEM,res,degree) {
   ##  exclude an area of the DEM from the calculations
   ##  still to implement in R (using NA's)
 
-  result <- .C("sinkfill",
+  result <- .C("c_sinkfill",
                PACKAGE = "topmodel",
                as.double(DEM),
                result = double(nrow*ncol + 2),

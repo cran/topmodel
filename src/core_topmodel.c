@@ -5,7 +5,7 @@
 
 #include "topmodel.h"
 
-void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep)
+void run_topmodel(double *rain, double *ETp, int nidxclass, int i, int ntimestep)
 {
   int    j, k;
   double Aatb_r, _qo, _qv;
@@ -104,8 +104,8 @@ void run_topmodel(double *rain, double *ET0, int nidxclass, int i, int ntimestep
        ET is extracted from the root zone   */
 
     misc.Ea[i][j] = 0.0;
-    if(ET0[i] > 0.0){
-      misc.Ea[i][j] = ET0[i] * (1 - misc.Srz[i][j] / params.Srmax);
+    if(ETp[i] > 0.0){
+      misc.Ea[i][j] = ETp[i] * (1 - misc.Srz[i][j] / params.Srmax);
       if(misc.Ea[i][j] > params.Srmax - misc.Srz[i][j])
 	misc.Ea[i][j] = params.Srmax - misc.Srz[i][j];
     }

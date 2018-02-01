@@ -1,4 +1,4 @@
-topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = NA) {
+topmodel <- function(parameters, topidx, delay, rain, ETp, verbose = F, Qobs = NA) {
 
   ## deal with verbosity:
 
@@ -40,13 +40,13 @@ topmodel <- function(parameters, topidx, delay, rain, ET0, verbose = F, Qobs = N
 
   ## running the model...
 
-  result <- .C("topmodel",
+  result <- .C("c_topmodel",
                PACKAGE = "topmodel",
                as.double(t(parameters)),
                as.double(as.matrix(topidx)),
                as.double(as.matrix(delay)),
                as.double(rain),
-               as.double(ET0),
+               as.double(ETp),
                as.double(Qobs),
                as.integer(length(as.double(as.matrix(topidx)))/2),
                as.integer(length(rain)),

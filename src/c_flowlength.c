@@ -5,7 +5,7 @@
 #include <math.h>
 #include <R.h>
 
-void flowlength(double *inputdem, double *output, int *nrow, int *ncol, int *iout, int *jout)
+void c_flowlength(double *inputdem, double *output, int *nrow, int *ncol, int *iout, int *jout)
 {
   int i,j,ii,jj,i2,j2,k,idown,jdown,orig_i,orig_j,flowlength,endflow;
   int *flowi, *flowj;

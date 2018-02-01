@@ -1,6 +1,6 @@
 infiltration <- function(rain, parameters) {
 
-  result <- .C("infiltration",
+  result <- .C("c_infiltration",
                PACKAGE = "topmodel",
                as.double(rain),
                as.double(parameters),
